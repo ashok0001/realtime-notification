@@ -9,26 +9,42 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zosh.exception.UserException;
 import com.zosh.modal.ChatMessage;
+import com.zosh.modal.User;
+import com.zosh.repository.UserRepository;
 import com.zosh.service.MessageService;
+import com.zosh.service.UserService;
 
 @RestController
 public class ChatController {
 	
 	MessageService messageService;
+	UserService userService;
+	UserRepository userRepository;
 	
-	public ChatController(MessageService messageService) {
+	public ChatController(MessageService messageService, UserService userService, UserRepository userRepository) {
 		this.messageService=messageService;
-		// TODO Auto-generated constructor stub
+		this.userService=userService;
+		this.userRepository=userRepository;
+		
 	}
 	
 	@Autowired
     private SimpMessagingTemplate template;
 	
 	@PostMapping("/message/send/{userId}")
-	public ResponseEntity<ChatMessage> sendMessage(@PathVariable Integer userId , @RequestBody ChatMessage message){
+	public ResponseEntity<ChatMessage> sendMessage(@PathVariable Integer userId , @RequestBody ChatMessage message) throws UserException{
+		
+		User user=userService.findUserById(userId);
+		
+		message.setSender(user);
 		
 		ChatMessage createdMessage=messageService.sendMessage(message);
+		
+		user.getMessages().add(createdMessage);
+		
+		userRepository.save(user);
 		
 		this.template.convertAndSend("/topic/message/recive/"+userId, createdMessage);
 		

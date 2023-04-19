@@ -2,6 +2,7 @@ package com.zosh.modal;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,10 +24,56 @@ public class ChatMessage {
  
     private String content;
  
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User sender;
  
     private LocalDateTime timestamp;
+    
+    public ChatMessage() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ChatMessage(Integer id, String content, User sender, LocalDateTime timestamp) {
+		super();
+		this.id = id;
+		this.content = content;
+		this.sender = sender;
+		this.timestamp = timestamp;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public User getSender() {
+		return sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+    
+    
  
     
 }

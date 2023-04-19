@@ -1,13 +1,20 @@
 package com.zosh.service;
 
-import com.zosh.modal.User;
+import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
+import com.zosh.exception.UserException;
+import com.zosh.modal.User;
+import com.zosh.repository.UserRepository;
+
+@Service
 public class UserServiceImplementation implements UserService {
 	
-	UserService userService;
+	UserRepository userRepository;
 	
-	public UserServiceImplementation(UserService userService) {
-		
+	public UserServiceImplementation(UserRepository userRepository) {
+		this.userRepository=userRepository;
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -15,8 +22,19 @@ public class UserServiceImplementation implements UserService {
 	@Override
 	public User createUser(User user) {
 		
-//		User createdUser=user
-		return null;
+		User createdUser=userRepository.save(user);
+		
+		return createdUser;
+	}
+
+	@Override
+	public User findUserById(Integer userId) throws UserException {
+		Optional<User> user=userRepository.findById(userId);
+		
+		if(user.isPresent()) {
+			return user.get();
+		}
+		throw new UserException(null);
 	}
 
 }
