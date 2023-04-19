@@ -24,7 +24,7 @@ public class ChatMessage {
  
     private String content;
  
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User sender;
  
     private LocalDateTime timestamp;

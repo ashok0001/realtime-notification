@@ -1,5 +1,7 @@
 package com.zosh.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import com.zosh.service.UserService;
 
 @RestController
 public class ChatController {
+//	@Autowired
+//    private SimpMessagingTemplate template;
 	
 	MessageService messageService;
 	UserService userService;
@@ -30,23 +34,27 @@ public class ChatController {
 		
 	}
 	
-	@Autowired
-    private SimpMessagingTemplate template;
+
 	
-	@PostMapping("/message/send/{userId}")
+	@PostMapping("/api/messages/send/{userId}")
 	public ResponseEntity<ChatMessage> sendMessage(@PathVariable Integer userId , @RequestBody ChatMessage message) throws UserException{
 		
 		User user=userService.findUserById(userId);
 		
 		message.setSender(user);
-		
+		message.setTimestamp(LocalDateTime.now());
+//		
 		ChatMessage createdMessage=messageService.sendMessage(message);
-		
+//		
 		user.getMessages().add(createdMessage);
 		
 		userRepository.save(user);
 		
-		this.template.convertAndSend("/topic/message/recive/"+userId, createdMessage);
+//		ChatMessage createdMessage=new ChatMessage();
+//		createdMessage.setContent(message.getContent());
+		
+		
+//		this.template.convertAndSend("/topic/message/recive/"+userId, createdMessage);
 		
 		
 		

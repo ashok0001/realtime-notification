@@ -2,6 +2,8 @@ package com.zosh.modal;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +26,7 @@ public class User {
 	private String fullName;
 	private String email;
 	
-	@OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+	@OneToMany
 	private List<ChatMessage> messages;
 	
 	public User() {
@@ -63,6 +65,7 @@ public class User {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public List<ChatMessage> getMessages() {
 		return messages;
 	}
